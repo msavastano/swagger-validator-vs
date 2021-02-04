@@ -1,0 +1,11 @@
+openapi: 3.0.0
+info: 
+  version: hi
+  title: title
+paths: 
+  /getstuff: 
+    get:
+      description: test
+      responses:
+        200:
+          description: test
