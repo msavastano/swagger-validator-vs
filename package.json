@@ -1,0 +1,48 @@
+{
+  "name": "swagger-validator",
+  "publisher": "emsav",
+  "repository": "local",
+  "displayName": "swagger-validator",
+  "description": "Validates swagger open-api specs",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.52.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:yaml",
+    "onLanguage:json"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+				"command": "swagger.validate",
+				"title": "Validate Swagger"
+			}
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.52.0",
+    "eslint": "^7.19.0",
+    "glob": "^7.1.6",
+    "mocha": "^8.2.1",
+    "typescript": "^4.1.3",
+    "vsce": "^1.85.0",
+    "vscode-test": "^1.5.0"
+  },
+  "dependencies": {
+    "swagger-parser": "^10.0.2",
+    "yaml": "^1.10.0"
+  }
+}
