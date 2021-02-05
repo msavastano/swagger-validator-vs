@@ -3,26 +3,26 @@
   "publisher": "emsav",
   "license": "MIT",
   "repository": {
-		"type": "git",
-		"url": "https://github.com/msavastano/swagger-validator-vs"
-	},
+    "type": "git",
+    "url": "https://github.com/msavastano/swagger-validator-vs"
+  },
   "displayName": "Swagger Validator",
   "description": "Validates swagger open-api specs",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.52.0"
   },
-	"keywords": [
-		"swagger",
-		"openapi",
-		"api",
-		"json",
-		"yaml"
-	],
+  "keywords": [
+    "swagger",
+    "openapi",
+    "api",
+    "json",
+    "yaml"
+  ],
   "galleryBanner": {
-		"color": "#4a4a4a",
-		"theme": "dark"
-	},
+    "color": "#4a4a4a",
+    "theme": "dark"
+  },
   "icon": "static/images/api.png",
   "categories": [
     "Other"
@@ -36,7 +36,8 @@
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "node ./test/runTest.js",
-    "package": "./node_modules/.bin/vsce package"
+    "package": "./node_modules/.bin/vsce package",
+    "release": "./node_modules/.bin/standard-version"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",
