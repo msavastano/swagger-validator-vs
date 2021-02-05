@@ -45,6 +45,16 @@ async function validateSwagger(parsed, doc) {
 		return api
 	} catch(err) {
 		err.fileName = doc.fileName
+		// Multifile specs need dereference bundle or they won't find other files
+		if (err.message.includes('ENOENT: no such file or directory')) {
+			try {
+				let api = await SwaggerParser.dereference(doc.fileName)
+				api.fileName = doc.fileName
+				return api
+			} catch(error) {
+				return error
+			}
+		}
 		return err
 	}
 }
@@ -104,7 +114,7 @@ ${val.message}
 	}
 	output.appendLine(message)
 	const hoverWords = ['swagger', '"swagger"', 'openapi', '"openapi"']
-	const hover = vscode.languages.registerHoverProvider(
+	const hov = vscode.languages.registerHoverProvider(
 		doc.languageId,
 		{
 			provideHover(doc, position) {
@@ -116,8 +126,8 @@ ${val.message}
 			}
 		}
 	)
-	hover.fileName = doc.fileName
-	return hover
+	hov.fileName = doc.fileName
+	return hov
 }
 
 /**
