@@ -8,9 +8,12 @@ Uses swagger-cli vaidation**
 
 > Tip: Shows validation results on hovering swagger / openapi keys - or - by viewng the output logs for swagger-validator
 
-## Release Notes
-### 1.0.0
+## Known Issues
 
+## Release Notes
+### 1.1.0
+Multifile spec support
+### 1.0.0
 Initial release
 ## Credits
 [YAML](https://www.npmjs.com/package/yaml)  
