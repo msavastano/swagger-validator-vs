@@ -34,27 +34,19 @@ function preCheck(parsed, doc) {
 
 /**
  * Validation
- * @param {Object} parsed YAML or JSON parsed
  * @param {Object} doc vscode document object
  */
-async function validateSwagger(parsed, doc) {
-
+async function validateSwagger(doc) {
+	let api
+	let deref
 	try {
-		let api = await SwaggerParser.validate(parsed)
+		// Multifile specs need dereference bundle or won't find other files
+		deref = await SwaggerParser.dereference(doc.fileName)
+		api = await SwaggerParser.validate(deref)
 		api.fileName = doc.fileName
 		return api
 	} catch(err) {
 		err.fileName = doc.fileName
-		// Multifile specs need dereference bundle or they won't find other files
-		if (err.message.includes('ENOENT: no such file or directory')) {
-			try {
-				let api = await SwaggerParser.dereference(doc.fileName)
-				api.fileName = doc.fileName
-				return api
-			} catch(error) {
-				return error
-			}
-		}
 		return err
 	}
 }
@@ -64,24 +56,17 @@ async function validateSwagger(parsed, doc) {
  * @param {Object} doc vscode document object
  */
 async function onOpenAndSave(doc) {
-	
-	if (doc.languageId == "yaml" && doc.uri.scheme === "file") {
-		const yamlParsed = YAML.parse(doc.getText())
-		if (yamlParsed.swagger || yamlParsed.openapi) {
-			let result = preCheck(yamlParsed, doc)
-			if (result.message === '') {
-				result = await validateSwagger(yamlParsed, doc)
-			} 
-			return result
+	if ((doc.languageId == "yaml" || doc.languageId == "json") && doc.uri.scheme === "file") {
+		let parse
+		if (doc.languageId == "yaml") {
+			parse = YAML.parse(doc.getText())
+		} else {
+			parse = JSON.parse(doc.getText())
 		}
-	}
-
-	if (doc.languageId == "json" && doc.uri.scheme === "file") {
-		const jsonParsed = JSON.parse(doc.getText())
-		if (jsonParsed.swagger || jsonParsed.openapi) {
-			let result = preCheck(jsonParsed, doc)
+		if (parse.swagger || parse.openapi) {
+			let result = preCheck(parse, doc)
 			if (result.message === '') {
-				result = await validateSwagger(jsonParsed, doc)
+				result = await validateSwagger(doc)
 			} 
 			return result
 		}
@@ -158,13 +143,17 @@ async function activate(context) {
 	vscode.workspace.onDidOpenTextDocument(async (doc) => {
 		disposeDuplicateHovers(currentHovers, doc)
 		let val = await onOpenAndSave(doc)
-		currentHovers.push(hover(val, doc, output))
+		if(val) {
+			currentHovers.push(hover(val, doc, output))
+		}
 	})
 
 	vscode.workspace.onDidSaveTextDocument(async (doc) => {
 		disposeDuplicateHovers(currentHovers, doc)
 		let val = await onOpenAndSave(doc)
-		currentHovers.push(hover(val, doc, output))
+		if(val) {
+			currentHovers.push(hover(val, doc, output))
+		}
 	})
 }
 
