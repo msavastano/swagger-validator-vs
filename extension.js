@@ -1,9 +1,12 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode')
 const YAML = require('yaml')
 const SwaggerParser = require("swagger-parser")
 
+/**
+ * Add extra clarity to basic valdation errors that swagger-cli does not provide
+ * @param {Object} parsed YAML or JSON parsed
+ * @param {Object} doc vscode document object
+ */
 function preCheck(parsed, doc) {
 	const pre = {
 		fileName: doc.fileName
@@ -12,7 +15,7 @@ function preCheck(parsed, doc) {
 	const regex = /^3\.0\.\d(-.+)?$/
 	if (parsed) {
 		if (parsed.swagger && parsed.swagger !== "2.0") {
-			result+='SyntaxError: Unrecognized Swagger version. Expected 2.0 (also must of String type\n'
+			result+='SyntaxError: Unrecognized Swagger version. Expected 2.0 (also must be String type)\n'
 		} else if (parsed.openapi && !regex.test(parsed.openapi)) {
 			result+='SyntaxError: Unsupported OpenAPI version. Swagger Parser only supports OpenAPI versions =>3.0.0\n'
 		}
@@ -29,6 +32,11 @@ function preCheck(parsed, doc) {
 	return pre
 }
 
+/**
+ * Validation
+ * @param {Object} parsed YAML or JSON parsed
+ * @param {Object} doc vscode document object
+ */
 async function validateSwagger(parsed, doc) {
 
 	try {
@@ -41,6 +49,10 @@ async function validateSwagger(parsed, doc) {
 	}
 }
 
+/**
+ * Actions to take on opening and saving documents
+ * @param {Object} doc vscode document object
+ */
 async function onOpenAndSave(doc) {
 	
 	if (doc.languageId == "yaml" && doc.uri.scheme === "file") {
@@ -66,6 +78,12 @@ async function onOpenAndSave(doc) {
 	}
 }
 
+/**
+ * Create and register the hover object
+ * @param {Object} val Validation results
+ * @param {Object} doc vscode document object
+ * @param {Function} output function to add to extension output log
+ */
 function hover(val, doc, output) {
 	
 	let message = ''
@@ -73,23 +91,26 @@ function hover(val, doc, output) {
 		message = 
 `
 ${doc.fileName}  
-Valid swagger/openapi
+Valid swagger/openapi  
+-------------
 `
 	} else {
 		message = 
 `
 ${doc.fileName}  
 ${val.message}
+-------------
 `
 	}
-	output.appendLine('***********')
 	output.appendLine(message)
-	output.appendLine('***********')
+	const hoverWords = ['swagger', '"swagger"', 'openapi', '"openapi"']
 	const hover = vscode.languages.registerHoverProvider(
 		doc.languageId,
 		{
 			provideHover(doc, position) {
-				if (val.fileName === doc.fileName && position.line === 0 || position.line === 1) {
+				const range = doc.getWordRangeAtPosition(position)
+				const word = doc.getText(range)
+				if (val.fileName === doc.fileName && hoverWords.includes(word)) {
 					return new vscode.Hover(message)
 				}
 			}
@@ -99,6 +120,11 @@ ${val.message}
 	return hover
 }
 
+/**
+ * 
+ * @param {Array} currentHovers list of hovers
+ * @param {Object} doc vscode document object
+ */
 function disposeDuplicateHovers(currentHovers, doc) {
 	currentHovers.forEach(h => {
 		if (h.fileName === doc.fileName) {
@@ -110,7 +136,6 @@ function disposeDuplicateHovers(currentHovers, doc) {
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-
 /**
  * @param {vscode.ExtensionContext} context
  */
