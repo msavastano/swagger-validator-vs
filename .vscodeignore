@@ -7,3 +7,8 @@ vsc-extension-quickstart.md
 **/jsconfig.json
 **/*.map
 **/.eslintrc.json
+webpack.config.js
+out/
+src/
+node_modules
+testFiles

@@ -9,6 +9,7 @@
 			"name": "Run Extension",
 			"type": "extensionHost",
 			"request": "launch",
+			"outFiles": ["${workspaceFolder}/dist/extension.js"],
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			]
