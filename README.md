@@ -2,7 +2,7 @@
 
 **Swagger Validator validates your Swagger 2.0 or OpenAPI >3 specs when opened or saved  
 Works with json and yaml  
-Uses swagger-cli vaidation**
+Uses swagger-cli validation**
 
 ![Swagger Validator](https://media.giphy.com/media/h3hCWmnQeyyhbIQRgj/giphy.gif)
 
@@ -11,6 +11,9 @@ Uses swagger-cli vaidation**
 ## Known Issues
 
 ## Release Notes
+
+### 1.1.2
+Webpack / Bugfix
 ### 1.1.0
 Multifile spec support
 ### 1.0.0

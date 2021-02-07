@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/msavastano/swagger-validator-vs/compare/v1.1.1...v1.1.2) (2021-02-07)
+
+
+### Bug Fixes
+
+* bundle with webpack ([31a15b2](https://github.com/msavastano/swagger-validator-vs/commit/31a15b25f585e18f25be3f99c4340a4a5b0c2170))
+* webpack bundling ([435d564](https://github.com/msavastano/swagger-validator-vs/commit/435d5644d97ed1b8a0b6fa05f8942854fa1f5e42))
+
 ### [1.1.1](https://github.com/msavastano/swagger-validator-vs/compare/v1.1.0...v1.1.1) (2021-02-05)
 
 
