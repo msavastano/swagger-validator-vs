@@ -12,3 +12,4 @@ out/
 src/
 node_modules
 testFiles
+CHANGELOG.md

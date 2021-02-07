@@ -1,0 +1,7 @@
+/users:
+  get:
+    responses:
+      200:
+        description: OK
+        schema:
+          $ref: 'swagger.yaml#/definitions/User'
