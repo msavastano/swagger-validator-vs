@@ -162,5 +162,7 @@ function deactivate() {}
 
 module.exports = {
 	activate,
-	deactivate
+	deactivate,
+	hover,
+	onOpenAndSave
 }
