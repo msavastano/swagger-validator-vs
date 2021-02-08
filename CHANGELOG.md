@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/msavastano/swagger-validator-vs/compare/v1.1.2...v1.1.3) (2021-02-08)
+
+
+### Bug Fixes
+
+* add unit tests ([75a38a7](https://github.com/msavastano/swagger-validator-vs/commit/75a38a7cc76cbcfc51ae2414ae92d1f3e3a1e05b))
+
 ### [1.1.2](https://github.com/msavastano/swagger-validator-vs/compare/v1.1.1...v1.1.2) (2021-02-07)
 
 
