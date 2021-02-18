@@ -4,14 +4,16 @@
 Works with json and yaml  
 Uses swagger-cli validation**
 
-![Swagger Validator](https://media.giphy.com/media/h3hCWmnQeyyhbIQRgj/giphy.gif)
+![Swagger Validator](https://media.giphy.com/media/4PvRL0hs19PUxkdckq/giphy.gif)
 
-> Tip: Shows validation results on hovering swagger / openapi keys - or - by viewng the output logs for swagger-validator
+> Tip: Shows validation error results on hovering swagger / openapi keys - or - by viewng the PROBLEMS panel
 
 ## Known Issues
 
 ## Release Notes
 
+### 2.0.0
+Changed validation from hovers to diagnostics.  UI changed.  Unit tests
 ### 1.1.2
 Webpack / Bugfix
 ### 1.1.0

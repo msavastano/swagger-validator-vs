@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: API
+  description: test
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: API path
+
+tags:
+  - name: test
+    description: test
+
+paths:
+  /test:
+    post:
+      tags:
+        - test
+      summary: testing
+      requestBody:
+        description: test
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestRequest'
+      responses:
+        '200':
+          $ref: '#/components/schemas/TestResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    Membership:
+      type: string
+      description: test role
+      example: USER
+
+    MembershipList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Membership'
+
+    TestRequest:
+      type: object
+      description: testing
+      properties:
+        code:
+          type: string
+          example: gCuaYnd6gCvgPJKd
+        uri:
+          type: string
+
+    TestResponse:
+      type: object
+      description: An code response object
+      properties:
+        expires_in:
+          description: TTL
+          type: number
+          example: 431999
+        type:
+          description:  type
+          type: string
+        member_of:
+          $ref: '#/components/schemas/MembershipList'

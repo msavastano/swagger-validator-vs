@@ -1,4 +1,5 @@
 const vscode = require('vscode')
+const diags = require('./diagnostics')
 const YAML = require('yaml')
 const SwaggerParser = require("swagger-parser")
 
@@ -76,56 +77,16 @@ async function onOpenAndSave(doc) {
 /**
  * Create and register the hover object
  * @param {Object} val Validation results
- * @param {Object} doc vscode document object
- * @param {Function} output function to add to extension output log
  */
-function hover(val, doc, output) {
+function createInfo(val) {
 	
 	let message = ''
 	if (val.info) {
-		message = 
-`
-${doc.fileName}  
-Valid swagger/openapi  
--------------
-`
+		message = 'Valid'
 	} else {
-		message = 
-`
-${doc.fileName}  
-${val.message}
--------------
-`
+		message = `${val.message}`
 	}
-	output.appendLine(message)
-	const hoverWords = ['swagger', '"swagger"', 'openapi', '"openapi"']
-	const hov = vscode.languages.registerHoverProvider(
-		doc.languageId,
-		{
-			provideHover(doc, position) {
-				const range = doc.getWordRangeAtPosition(position)
-				const word = doc.getText(range)
-				if (val.fileName === doc.fileName && hoverWords.includes(word)) {
-					return new vscode.Hover(message)
-				}
-			}
-		}
-	)
-	hov.fileName = doc.fileName
-	return hov
-}
-
-/**
- * 
- * @param {Array} currentHovers list of hovers
- * @param {Object} doc vscode document object
- */
-function disposeDuplicateHovers(currentHovers, doc) {
-	currentHovers.forEach(h => {
-		if (h.fileName === doc.fileName) {
-			h.dispose()
-		}
-	})
+	return message
 }
 
 
@@ -135,26 +96,34 @@ function disposeDuplicateHovers(currentHovers, doc) {
  * @param {vscode.ExtensionContext} context
  */
 async function activate(context) {
-	
-	//Create output channel
-	let output = vscode.window.createOutputChannel("swagger-validator")
-	let currentHovers = []
+	const errorDiagnostics = vscode.languages.createDiagnosticCollection('swagger-validator')
+	if (vscode.window.activeTextEditor) {
+		const val = await onOpenAndSave(vscode.window.activeTextEditor.document)
+		const message = createInfo(val)
+		diags.refreshDiagnostics(vscode.window.activeTextEditor.document, errorDiagnostics, message)
+	}
 
-	vscode.workspace.onDidOpenTextDocument(async (doc) => {
-		disposeDuplicateHovers(currentHovers, doc)
-		let val = await onOpenAndSave(doc)
-		if(val) {
-			currentHovers.push(hover(val, doc, output))
-		}
-	})
+	context.subscriptions.push(
+		vscode.window.onDidChangeActiveTextEditor(async editor => {
+			if (editor) {
+				const val = await onOpenAndSave(editor.document)
+				const message = createInfo(val)
+				diags.refreshDiagnostics(editor.document, errorDiagnostics, message)
+			}
+		})
+	)
 
-	vscode.workspace.onDidSaveTextDocument(async (doc) => {
-		disposeDuplicateHovers(currentHovers, doc)
-		let val = await onOpenAndSave(doc)
-		if(val) {
-			currentHovers.push(hover(val, doc, output))
-		}
-	})
+	context.subscriptions.push(
+		vscode.workspace.onDidChangeTextDocument(async e => {
+			const val = await onOpenAndSave(e.document)
+			const message = createInfo(val)
+			diags.refreshDiagnostics(e.document, errorDiagnostics, message)
+		})
+	)
+
+	context.subscriptions.push(
+		vscode.workspace.onDidCloseTextDocument(doc => errorDiagnostics.delete(doc.uri))
+	)
 }
 
 // this method is called when your extension is deactivated
@@ -163,6 +132,5 @@ function deactivate() {}
 module.exports = {
 	activate,
 	deactivate,
-	hover,
 	onOpenAndSave
 }
