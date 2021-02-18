@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/msavastano/swagger-validator-vs/compare/v1.1.3...v2.0.0) (2021-02-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* Change hovers to diagmnostics
+
+### Features
+
+* Change hovers to diagmnostics ([bcf06ca](https://github.com/msavastano/swagger-validator-vs/commit/bcf06ca9f022c6073db56af43558d6f1716bb4c8))
+
 ### [1.1.3](https://github.com/msavastano/swagger-validator-vs/compare/v1.1.2...v1.1.3) (2021-02-08)
 
 
